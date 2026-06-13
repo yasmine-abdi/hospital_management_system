@@ -76,14 +76,39 @@
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
         OPD
       </a>
-      <a href="#" class="sidebar-link" title="Inpatients">
-        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-        Inpatients
-      </a>
-      <a href="#" class="sidebar-link" title="Pharmacy">
-        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-        Pharmacy
-      </a>
+      <div class="nav-item has-submenu">
+        <a href="#" class="sidebar-link {% if 'ipd' in request.resolver_match.url_name or 'admission' in request.resolver_match.url_name or 'bed' in request.resolver_match.url_name %}active{% endif %}" title="Inpatients" onclick="toggleSubmenu(event, 'inpatient-submenu')">
+          <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+          Inpatients
+          <svg class="submenu-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="14" height="14" style="margin-left:auto; transition: transform 0.2s; {% if 'ipd' in request.resolver_match.url_name or 'admission' in request.resolver_match.url_name or 'bed' in request.resolver_match.url_name %}transform: rotate(180deg);{% endif %}"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+        </a>
+        <div id="inpatient-submenu" class="submenu" style="display: {% if 'ipd' in request.resolver_match.url_name or 'admission' in request.resolver_match.url_name or 'bed' in request.resolver_match.url_name %}flex{% else %}none{% endif %}; flex-direction: column; gap: 2px; padding-left: 15px; margin-top: 2px; margin-bottom: 2px; border-left: 2px solid rgba(255,255,255,0.1); margin-left: 20px;">
+          <a href="{% url 'admission_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'admission_list' %}active{% endif %}" style="padding: 7px 20px; font-size: 13px;" title="Bukaan-jiif (IPD)">
+            Bukaan-jiif (IPD)
+          </a>
+          <a href="{% url 'bed_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'bed_list' %}active{% endif %}" style="padding: 7px 20px; font-size: 13px;" title="Sariiraha (Beds)">
+            Sariiraha (Beds)
+          </a>
+        </div>
+      </div>
+      <div class="nav-item has-submenu">
+        <a href="#" class="sidebar-link {% if 'pharmacy' in request.resolver_match.url_name or 'medicine' in request.resolver_match.url_name %}active{% endif %}" title="Pharmacy" onclick="toggleSubmenu(event, 'pharmacy-submenu')">
+          <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          Pharmacy
+          <svg class="submenu-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="14" height="14" style="margin-left:auto; transition: transform 0.2s; {% if 'pharmacy' in request.resolver_match.url_name or 'medicine' in request.resolver_match.url_name %}transform: rotate(180deg);{% endif %}"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+        </a>
+        <div id="pharmacy-submenu" class="submenu" style="display: {% if 'pharmacy' in request.resolver_match.url_name or 'medicine' in request.resolver_match.url_name %}flex{% else %}none{% endif %}; flex-direction: column; gap: 2px; padding-left: 15px; margin-top: 2px; margin-bottom: 2px; border-left: 2px solid rgba(255,255,255,0.1); margin-left: 20px;">
+          <a href="{% url 'medicine_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'medicine_list' %}active{% endif %}" style="padding: 7px 20px; font-size: 13px;" title="Daawooyinka">
+            Daawooyinka
+          </a>
+          <a href="{% url 'pharmacy_sale_create' %}" class="sidebar-link {% if request.resolver_match.url_name == 'pharmacy_sale_create' %}active{% endif %}" style="padding: 7px 20px; font-size: 13px;" title="Add Invoice">
+            Add Invoice
+          </a>
+          <a href="{% url 'pharmacy_sale_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'pharmacy_sale_list' %}active{% endif %}" style="padding: 7px 20px; font-size: 13px;" title="Invoice List">
+            Invoice List
+          </a>
+        </div>
+      </div>
       <a href="#" class="sidebar-link" title="Laboratory">
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21h6M12 15v6M9.5 2 12 6.5 14.5 2"/><path d="M6.5 6.5h11l1 14.5H5.5L6.5 6.5z"/></svg>
         Laboratory

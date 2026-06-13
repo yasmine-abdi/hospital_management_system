@@ -129,6 +129,19 @@
               Add Doctor
           </a>
       </div>
+      
+      <!-- Submenu for Pharmacy -->
+      <div style="background: rgba(0,0,0,0.1); padding: 10px 0;">
+          <div class="sidebar-link" style="opacity: 0.7; font-size: 12px; padding: 5px 20px; pointer-events: none;">
+              <span class="material-symbols-outlined" style="font-size: 18px;">local_pharmacy</span> PHARMACY
+          </div>
+          <a href="{% url 'medicine_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'medicine_list' %}active{% endif %}" style="padding-left: 40px;">
+              Daawooyinka (Stock)
+          </a>
+          <a href="{% url 'pharmacy_sale_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'pharmacy_sale_list' %}active{% endif %}" style="padding-left: 40px;">
+              Iibka (Sales)
+          </a>
+      </div>
       <a href="#" class="sidebar-link">
         <span class="material-symbols-outlined">account_balance_wallet</span> Billing
       </a>

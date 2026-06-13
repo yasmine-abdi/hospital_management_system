@@ -21,6 +21,7 @@ from hospital.views import login_view, dashboard_view
 from django.contrib.auth.views import LogoutView # Import-garee LogoutView
 from hospital.views import add_patient_view, patient_list_view
 from hospital import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', RedirectView.as_view(url='/login/'), name='home'),
@@ -39,4 +40,23 @@ urlpatterns = [
     path('appointments/create/', views.appointment_create, name='appointment_create'),
     path('appointments/<int:pk>/update/', views.appointment_update, name='appointment_update'),
     path('appointments/<int:pk>/delete/', views.appointment_delete, name='appointment_delete'),
+
+    # Pharmacy URLs
+    path('pharmacy/medicines/', views.medicine_list, name='medicine_list'),
+    path('pharmacy/medicines/create/', views.medicine_create, name='medicine_create'),
+    path('pharmacy/medicines/<int:pk>/update/', views.medicine_update, name='medicine_update'),
+    path('pharmacy/medicines/<int:pk>/delete/', views.medicine_delete, name='medicine_delete'),
+    
+    path('pharmacy/sales/', views.pharmacy_sale_list, name='pharmacy_sale_list'),
+    path('pharmacy/sales/create/', views.pharmacy_sale_create, name='pharmacy_sale_create'),
+    path('pharmacy/sales/<int:pk>/', views.pharmacy_sale_detail, name='pharmacy_sale_detail'),
+
+    # Inpatient (IPD) URLs
+    path('ipd/admissions/', views.admission_list, name='admission_list'),
+    path('ipd/admissions/create/', views.admission_create, name='admission_create'),
+    path('ipd/admissions/<int:pk>/update/', views.admission_update, name='admission_update'),
+    path('ipd/admissions/<int:pk>/discharge/', views.discharge_patient, name='discharge_patient'),
+    path('ipd/beds/', views.bed_list, name='bed_list'),
+    path('ipd/beds/create/', views.bed_create, name='bed_create'),
+    path('ipd/wards/create/', views.ward_create, name='ward_create'),
 ]

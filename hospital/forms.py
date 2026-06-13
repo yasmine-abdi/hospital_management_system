@@ -1,5 +1,5 @@
 from django import forms
-from .models import Patient, Doctor, Specialization, Appointment
+from .models import Patient, Doctor, Specialization, Appointment, Medicine, PharmacySale, PharmacySaleItem, Ward, Bed, Admission
 
 class PatientForm(forms.ModelForm):
     class Meta:
@@ -97,3 +97,95 @@ class AppointmentForm(forms.ModelForm):
             'appointment_date': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
             'status': forms.Select(attrs={'class': 'form-select form-control'}),
         }
+
+class MedicineForm(forms.ModelForm):
+    class Meta:
+        model = Medicine
+        fields = ['name', 'description', 'batch_number', 'expiry_date', 'stock_quantity', 'unit_price']
+        labels = {
+            'name': 'Magaca Daawada (Medicine Name)',
+            'description': 'Faahfaahin (Description)',
+            'batch_number': 'Batch Number',
+            'expiry_date': 'Taariikhda Dhicitaanka (Expiry Date)',
+            'stock_quantity': 'Tirada Kaydka (Stock Quantity)',
+            'unit_price': 'Qiimaha Xabadda (Unit Price)'
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Magaca daawada'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Faahfaahinta...'}),
+            'batch_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tusaale: BATCH-001'}),
+            'expiry_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'stock_quantity': forms.NumberInput(attrs={'class': 'form-control'}),
+            'unit_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+        }
+
+class PharmacySaleForm(forms.ModelForm):
+    class Meta:
+        model = PharmacySale
+        fields = ['patient']
+        labels = {
+            'patient': 'Bukaanka (Patient)'
+        }
+        widgets = {
+            'patient': forms.Select(attrs={'class': 'form-select form-control'}),
+        }
+
+# ==========================================
+# INPATIENT (IPD) FORMS
+# ==========================================
+
+class WardForm(forms.ModelForm):
+    class Meta:
+        model = Ward
+        fields = ['name']
+        labels = {'name': 'Ward Name'}
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., General Ward'}),
+        }
+
+class BedForm(forms.ModelForm):
+    class Meta:
+        model = Bed
+        fields = ['ward', 'room_number', 'bed_number', 'is_available']
+        labels = {
+            'ward': 'Qeybta (Ward)',
+            'room_number': 'Nambarka Qolka (Room Number)',
+            'bed_number': 'Nambarka Sariirta (Bed Number)',
+            'is_available': 'Waa Banaan Tahay (Available)?'
+        }
+        widgets = {
+            'ward': forms.Select(attrs={'class': 'form-select form-control'}),
+            'room_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tusaale: Qolka 101'}),
+            'bed_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tusaale: Sariirta A'}),
+            'is_available': forms.CheckboxInput(attrs={'class': 'form-check-input'})
+        }
+
+class AdmissionForm(forms.ModelForm):
+    class Meta:
+        model = Admission
+        fields = ['patient', 'doctor', 'bed', 'admission_date', 'expected_discharge_date', 'status', 'notes']
+        labels = {
+            'patient': 'Bukaanka (Patient)',
+            'doctor': 'Dhakhtarka Masuulka ah (Assigned Doctor)',
+            'bed': 'Qolka iyo Sariirta (Room & Bed)',
+            'admission_date': 'Taariikhda Gelitaanka (Admission Date)',
+            'expected_discharge_date': 'Taariikhda Bixitaanka La Filayo (Expected Discharge)',
+            'status': 'Xaaladda (Status)',
+            'notes': 'Faahfaahin (Notes)'
+        }
+        widgets = {
+            'patient': forms.Select(attrs={'class': 'form-select form-control'}),
+            'doctor': forms.Select(attrs={'class': 'form-select form-control'}),
+            'bed': forms.Select(attrs={'class': 'form-select form-control'}),
+            'admission_date': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'expected_discharge_date': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'status': forms.Select(attrs={'class': 'form-select form-control'}),
+            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Geli wixii faahfaahin ah oo ku saabsan gelitaanka bukaanka...'})
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(AdmissionForm, self).__init__(*args, **kwargs)
+        if not self.instance.pk:
+            self.fields['bed'].queryset = Bed.objects.filter(is_available=True)
+        else:
+            self.fields['bed'].queryset = Bed.objects.filter(is_available=True) | Bed.objects.filter(pk=self.instance.bed.pk)
